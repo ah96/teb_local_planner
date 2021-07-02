@@ -1,0 +1,7 @@
+<launch>
+	
+  	<!--- Run node to call teb_local_planner or lime perturbed data -->
+   	<node pkg="teb_local_planner" type="perturb_node_image" name="perturb_node_image" output="screen" />
+
+</launch>
+
