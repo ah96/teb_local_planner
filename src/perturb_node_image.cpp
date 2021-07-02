@@ -90,7 +90,7 @@ int main( int argc, char** argv )
         //ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
 
 
-		std::cout << "perturb_node_image started" << std::endl << std::endl;
+		std::cout << std::endl << "perturb_node_image started" << std::endl << std::endl;
 		
 		// Load local costmap info
 		std::vector<std::vector<double>> local_costmap_info = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/costmap_info.csv");
