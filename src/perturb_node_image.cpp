@@ -93,10 +93,10 @@ int main( int argc, char** argv )
 		std::cout << std::endl << "perturb_node_image started" << std::endl << std::endl;
 		
 		// Load local costmap info
-		std::vector<std::vector<double>> local_costmap_info = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/costmap_info.csv");
+		std::vector<std::vector<double>> local_costmap_info = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/costmap_info.csv");
 				
 		// Load amcl_pose
-		std::vector<std::vector<double>> amcl = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/amcl_pose.csv");
+		std::vector<std::vector<double>> amcl = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/amcl_pose.csv");
 		std::vector<geometry_msgs::PoseStamped> amcl_pose;
 		for(int i = 0; i < amcl.size(); i++) 
 		{
@@ -112,7 +112,7 @@ int main( int argc, char** argv )
 		}
 		
 		// Load tf_odom_map
-		std::vector<std::vector<double>> tf_odom_map = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/tf_odom_map.csv");
+		std::vector<std::vector<double>> tf_odom_map = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/tf_odom_map.csv");
 		std::vector<geometry_msgs::TransformStamped> tf_odom_map_v;
 		for(int i = 0; i < tf_odom_map.size(); i++) 
 		{
@@ -129,7 +129,7 @@ int main( int argc, char** argv )
 		}
 		
 		// Load tf_map_odom
-		std::vector<std::vector<double>> tf_map_odom = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/tf_map_odom.csv");
+		std::vector<std::vector<double>> tf_map_odom = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/tf_map_odom.csv");
 		std::vector<geometry_msgs::TransformStamped> tf_map_odom_v;
 		for(int i = 0; i < tf_odom_map.size(); i++) 
 		{
@@ -146,7 +146,7 @@ int main( int argc, char** argv )
 		}
 		
 		// Load odometry
-		std::vector<std::vector<double>> odom = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/odom.csv");
+		std::vector<std::vector<double>> odom = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/odom.csv");
 		std::vector<geometry_msgs::PoseStamped> odom_pose;
 		std::vector<geometry_msgs::TwistStamped> odom_twist;
 		for(int i = 0; i < odom.size(); i++) 
@@ -173,7 +173,7 @@ int main( int argc, char** argv )
 		}	
 		
 		// Load plan from global planner
-		std::vector<std::vector<double>> global_plan = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/plan.csv");
+		std::vector<std::vector<double>> global_plan = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/plan.csv");
 		std::vector<geometry_msgs::PoseStamped> global_plan_t;
 		for(int i = 0; i < global_plan.size(); i++) 
 		{
@@ -190,7 +190,7 @@ int main( int argc, char** argv )
 		}
 		
 		// Load local plan
-		std::vector<std::vector<double>> local_plan = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/local_plan.csv");
+		std::vector<std::vector<double>> local_plan = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/local_plan.csv");
 		std::vector<geometry_msgs::PoseStamped> local_plan_t;
 		for(int i = 0; i < local_plan.size(); i++) 
 		{
@@ -207,7 +207,7 @@ int main( int argc, char** argv )
 		}
 		
 		// Load footprint
-		std::vector<std::vector<double>> footprint = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/footprint.csv");
+		std::vector<std::vector<double>> footprint = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/footprint.csv");
 		std::vector<geometry_msgs::Point> footprint_t;
 		for(int i = 0; i < footprint.size(); i++) 
 		{
@@ -219,7 +219,7 @@ int main( int argc, char** argv )
 		}
 		
 		// Load local costmap perturbations
-		std::vector<std::vector<double>> local_costmap_data = parse2DCsvFile("/home/robolab/amar_ws/src/teb_local_planner/src/Data/costmap_data.csv");
+		std::vector<std::vector<double>> local_costmap_data = parse2DCsvFile("~/amar_ws/src/teb_local_planner/src/Data/costmap_data.csv");
 		unsigned char arr[25600];
 		unsigned char* local_costmap_data_ptr = NULL;
 
@@ -233,7 +233,7 @@ int main( int argc, char** argv )
 			    	
 		// Command velocities output .csv file
 		std::ofstream myfile1;
-		myfile1.open("/home/robolab/amar_ws/src/teb_local_planner/src/Data/cmd_vel.csv");
+		myfile1.open("~/amar_ws/src/teb_local_planner/src/Data/cmd_vel.csv");
 		// Write columns' names to output files
 		std::string s1 = "cmd_vel_lin_x";
 		std::string s2 = "cmd_vel_lin_y";
@@ -244,7 +244,7 @@ int main( int argc, char** argv )
 		
 		// Local plans output .csv file
 		std::ofstream myfile2;
-		myfile2.open("/home/robolab/amar_ws/src/teb_local_planner/src/Data/local_plans.csv");		
+		myfile2.open("~/amar_ws/src/teb_local_planner/src/Data/local_plans.csv");		
 		// Write columns' names to output files
 		s1 = "local_plan_position_x";
 		s2 = "local_plan_position_y";
@@ -257,7 +257,7 @@ int main( int argc, char** argv )
 
 		// Tranformed plan output .csv file
 		std::ofstream myfile3;
-		myfile3.open("/home/robolab/amar_ws/src/teb_local_planner/src/Data/transformed_plan.csv");
+		myfile3.open("~/amar_ws/src/teb_local_planner/src/Data/transformed_plan.csv");
 		// Write columns' names to output files
 		s1 = "transformed_plan_position_x";
 		s2 = "transformed_plan_position_y";
@@ -313,12 +313,12 @@ int main( int argc, char** argv )
 			std::cout <<  std::to_string(cmd_vel.twist.linear.x) + "," + std::to_string(cmd_vel.twist.linear.y) + "," + std::to_string(cmd_vel.twist.angular.z) + "\n" << std::endl;
 
 			// write command velocities to the .csv file
-			myfile1.open("/home/robolab/amar_ws/src/teb_local_planner/src/Data/cmd_vel.csv", std::ios::app);
+			myfile1.open("~/amar_ws/src/teb_local_planner/src/Data/cmd_vel.csv", std::ios::app);
 			myfile1 <<  std::to_string(cmd_vel.twist.linear.x) + "," + std::to_string(cmd_vel.twist.linear.y) + "," + std::to_string(cmd_vel.twist.angular.z) + "\n";
 			myfile1.close();
 
 			// write local plans to the .csv file
-			myfile2.open("/home/robolab/amar_ws/src/teb_local_planner/src/Data/local_plans.csv", std::ios::app);
+			myfile2.open("~/amar_ws/src/teb_local_planner/src/Data/local_plans.csv", std::ios::app);
 			for(int j = 0; j < local_plan.size(); j++)
 				myfile2 <<  std::to_string(local_plan[j].pose.position.x) + "," + std::to_string(local_plan[j].pose.position.y) + "," + std::to_string(local_plan[j].pose.orientation.z) 
 			+ "," + std::to_string(local_plan[j].pose.orientation.w) + "," + std::to_string(i) + "\n";			
@@ -327,7 +327,7 @@ int main( int argc, char** argv )
             // write transformed (part of the) (global) plan (from the global planner) to the .csv file
 			if(i == 0)
 			{
-                myfile3.open("/home/robolab/amar_ws/src/teb_local_planner/src/Data/transformed_plan.csv", std::ios::app);
+                myfile3.open("~/amar_ws/src/teb_local_planner/src/Data/transformed_plan.csv", std::ios::app);
                 for(int j = 0; j < transformed_plan.size(); j++)
                     myfile3 <<  std::to_string(transformed_plan[j].pose.position.x) + "," + std::to_string(transformed_plan[j].pose.position.y) + "," +
                     std::to_string(transformed_plan[j].pose.orientation.z) + "," + std::to_string(transformed_plan[j].pose.orientation.w) + "\n";
