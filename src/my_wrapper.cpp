@@ -218,6 +218,9 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
 	  geometry_msgs::PoseStamped poseStamped;
 	  poseStamped.pose.position.x = pose_tmp.x();
 	  poseStamped.pose.position.y = pose_tmp.y();
+	  Eigen::Vector2d orient_vec = pose_tmp.orientationUnitVec();
+	  //poseStamped.pose.orientation = pose_tmp.orientationUnitVec();
+	  //std::cout << "Theta: " << pose_tmp.theta() << std::endl;
 	  local_plan.push_back(poseStamped);
   }
 
