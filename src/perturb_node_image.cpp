@@ -62,7 +62,6 @@ std::vector<std::vector<double>> parse2DCsvFile(std::string inputFileName) {
                     e.what();
                 }
             }
- 
             data.push_back(record);
         }
     }
@@ -100,6 +99,7 @@ int main( int argc, char** argv )
 		std::vector<geometry_msgs::PoseStamped> amcl_pose;
 		for(int i = 0; i < amcl.size(); i++) 
 		{
+		    //std::cout << amcl[i][0] << " " << amcl[i][1] << std::endl;
 			geometry_msgs::PoseStamped pose;
 			pose.pose.position.x = amcl[i][0];
 			pose.pose.position.y = amcl[i][1];
@@ -212,11 +212,14 @@ int main( int argc, char** argv )
 		for(int i = 0; i < footprint.size(); i++) 
 		{
 			geometry_msgs::Point point;
-			point.x = local_plan[i][0];
-			point.y = local_plan[i][1];
+			point.x = footprint[i][0];
+			point.y = footprint[i][1];
 			point.z = 0.0;
+			//std::cout << point.x << " " << point.y << " " << point.z << std::endl;
 			footprint_t.push_back(point);
 		}
+		
+		std::cout << "Zavrseno ucitavanje fajlova" << std::endl;
 		
 		// Load local costmap perturbations
 		std::vector<std::vector<double>> local_costmap_data = parse2DCsvFile("./src/teb_local_planner/src/Data/costmap_data.csv");

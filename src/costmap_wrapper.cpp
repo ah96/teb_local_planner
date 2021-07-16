@@ -104,6 +104,13 @@ namespace teb_local_planner
 
     bool teb_local_planner::LocalCostmapROS::worldToMap(double wx, double wy, unsigned int& mx, unsigned int& my) const
     {
+        /*
+        std::cout << "origin_x_: " << origin_x_ << std::endl;
+        std::cout << "origin_y_: " << origin_y_ << std::endl;
+        std::cout << "size_x_: " << size_x_ << std::endl;
+        std::cout << "size_y_: " << size_y_ << std::endl;
+        std::cout << "resolution_: " << resolution_ << std::endl;
+        */
         if (wx < origin_x_ || wy < origin_y_)
             return false;
 
@@ -147,9 +154,18 @@ namespace teb_local_planner
         double line_cost = 0.0;
         double footprint_cost = 0.0;
 
+        //std::cout << "footprint.size(): " << footprint.size() << std::endl;
+
         //we need to rasterize each line in the footprint
         for(unsigned int i = 0; i < footprint.size() - 1; ++i)
         {
+            /*
+            std::cout << "i in footprintCostHelper: " << i << std::endl;
+            std::cout << "footprint[i].x: " << footprint[i].x << std::endl;
+            std::cout << "footprint[i].y: " << footprint[i].y << std::endl;
+            std::cout << "footprint[i+1].x: " << footprint[i+1].x << std::endl;
+            std::cout << "footprint[i+1].y: " << footprint[i+1].y << std::endl; // << std::endl;
+            */
             //get the cell coord of the first point
             if(!worldToMap(footprint[i].x, footprint[i].y, x0, y0))
             {
@@ -166,7 +182,13 @@ namespace teb_local_planner
 
             line_cost = lineCost(x0, x1, y0, y1);
             footprint_cost = std::max(line_cost, footprint_cost);
-
+            /*
+            std::cout << "line cost: " << line_cost << std::endl;
+            std::cout << "x0: " << x0 << std::endl;
+            std::cout << "y0: " << y0 << std::endl;
+            std::cout << "x1: " << x1 << std::endl;
+            std::cout << "x1: " << y1 << std::endl << std::endl;
+            */
             //if there is an obstacle that hits the line... we know that we can return false right away
             if(line_cost < 0)
             {
@@ -245,8 +267,8 @@ namespace teb_local_planner
         for(unsigned int i = 0; i < footprint_spec.size(); ++i)
         {
             geometry_msgs::Point new_pt;
-            new_pt.x = x + (footprint_spec[i].x - odom_pose_.pose.position.x) * sin_th + (footprint_spec[i].y - odom_pose_.pose.position.y) * cos_th;
-            new_pt.y = y - (footprint_spec[i].x - odom_pose_.pose.position.x) * cos_th + (footprint_spec[i].y - odom_pose_.pose.position.y) * sin_th;
+            new_pt.x = x + (footprint_spec[i].x - odom_pose_.pose.position.x) * sin_th + (footprint_spec[i].y - odom_pose_.pose.position.y) * cos_th; //footprint_spec[i].x + (x - odom_pose_.pose.position.x);  //x + (footprint_spec[i].x - odom_pose_.pose.position.x) * sin_th + (footprint_spec[i].y - odom_pose_.pose.position.y) * cos_th;
+            new_pt.y = y - (footprint_spec[i].x - odom_pose_.pose.position.x) * cos_th + (footprint_spec[i].y - odom_pose_.pose.position.y) * sin_th; //footprint_spec[i].y + (y - odom_pose_.pose.position.y); //y - (footprint_spec[i].x - odom_pose_.pose.position.x) * cos_th + (footprint_spec[i].y - odom_pose_.pose.position.y) * sin_th;
             oriented_footprint.push_back(new_pt);
          }
 
@@ -260,6 +282,7 @@ namespace teb_local_planner
         }
 
         return footprintCostHelper(robot_position, oriented_footprint, inscribed_radius, circumscribed_radius);
+        //return footprintCostHelper(robot_position, footprint_spec, inscribed_radius, circumscribed_radius);
     }
 
     inline unsigned int teb_local_planner::LocalCostmapROS::getIndex(unsigned int mx, unsigned int my) const

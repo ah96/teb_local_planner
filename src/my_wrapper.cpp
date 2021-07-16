@@ -24,7 +24,8 @@ MyWrapper::~MyWrapper()
 }
 
 void MyWrapper::initialize(const LocalCostmapROS &local_costmap, const geometry_msgs::PoseStamped &odom_pose, const geometry_msgs::TwistStamped& odom_velocity,
-  const geometry_msgs::PoseStamped &amcl_pose, const geometry_msgs::TransformStamped &tf_odom_map_v, const geometry_msgs::TransformStamped &tf_map_odom_v, const std::vector<geometry_msgs::Point>& robotFootprint)
+  const geometry_msgs::PoseStamped &amcl_pose, const geometry_msgs::TransformStamped &tf_odom_map_v, const geometry_msgs::TransformStamped &tf_map_odom_v,
+  const std::vector<geometry_msgs::Point>& robotFootprint)
 {
 	// create robot footprint/contour model for optimization
 	RobotFootprintModelPtr robot_model = getRobotFootprintFromParamServer();
@@ -178,7 +179,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
 	message = "teb_local_planner was not able to obtain a local plan";
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-         
+
   // Check feasibility (but within the first few states only)
   if(config_.robot.is_footprint_dynamic)
   {

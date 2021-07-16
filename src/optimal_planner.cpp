@@ -1310,10 +1310,11 @@ bool TebOptimalPlanner::isTrajectoryFeasibleImage(LocalCostmapROS &costmap_model
   if (look_ahead_idx < 0 || look_ahead_idx >= teb().sizePoses())
     look_ahead_idx = teb().sizePoses() - 1;
 
-  std::cout << "look_ahead_idx: " << look_ahead_idx << std::endl;
+  //std::cout << "look_ahead_idx: " << look_ahead_idx << std::endl;
 
   for (int i=0; i <= look_ahead_idx; ++i)
   {
+    //std::cout << i << " in look_ahead_idx" << std::endl;
     if ( costmap_model.footprintCost(teb().Pose(i).x(), teb().Pose(i).y(), teb().Pose(i).theta(), footprint_spec, inscribed_radius, circumscribed_radius) == -1 )
     {
         std::cout << "isTrajectoryFeasibleImage False 1" << std::endl;
