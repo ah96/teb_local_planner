@@ -189,6 +189,7 @@ int main( int argc, char** argv )
 			global_plan_t.push_back(pose);
 		}
 		
+		/*
 		// Load local plan
 		std::vector<std::vector<double>> local_plan = parse2DCsvFile("./src/teb_local_planner/src/Data/local_plan.csv");
 		std::vector<geometry_msgs::PoseStamped> local_plan_t;
@@ -205,6 +206,7 @@ int main( int argc, char** argv )
 			pose.pose.orientation.w = local_plan[i][3];
 			local_plan_t.push_back(pose);
 		}
+		*/
 		
 		// Load footprint
 		std::vector<std::vector<double>> footprint = parse2DCsvFile("./src/teb_local_planner/src/Data/footprint.csv");
@@ -219,7 +221,7 @@ int main( int argc, char** argv )
 			footprint_t.push_back(point);
 		}
 		
-		std::cout << "Zavrseno ucitavanje fajlova" << std::endl;
+		//std::cout << "Zavrseno ucitavanje fajlova" << std::endl;
 		
 		// Load local costmap perturbations
 		std::vector<std::vector<double>> local_costmap_data = parse2DCsvFile("./src/teb_local_planner/src/Data/costmap_data.csv");
@@ -271,7 +273,7 @@ int main( int argc, char** argv )
 
 		
 		
-		std::cout << "Vrijeme za inicijalizaciju" << std::endl << std::endl;
+		//std::cout << "Vrijeme za inicijalizaciju" << std::endl << std::endl;
 				
 		// Calculate command velocities for every sampled perturbation
 		for(int i = 0; i < int(local_costmap_data.size() / 160); i++)
@@ -302,18 +304,18 @@ int main( int argc, char** argv )
 			std::vector<geometry_msgs::PoseStamped> transformed_plan;
 
 			// print current iteration
-			std::cout << "i = " << i << std::endl;
+			//std::cout << "i = " << i << std::endl;
 			rez = wrapper.computeVelocityCommandsImage(cmd_vel, message, local_plan, transformed_plan); // compute command velocities
 
 			// print result of the algorithm (whether it was successfull or no) and its message
-			std::cout << "Da li je racunanje komandnih brzina bilo ispravno (0-SUCCESS) = " << rez << std::endl;
-			std::cout << "Message: " << message << std::endl;
+			//std::cout << "Da li je racunanje komandnih brzina bilo ispravno (0-SUCCESS) = " << rez << std::endl;
+			//std::cout << "Message: " << message << std::endl;
 
 			// put local costmap pointer to the null pointer for the safety
 			local_costmap_data_ptr = NULL;
 
             // print command velocities
-			std::cout <<  std::to_string(cmd_vel.twist.linear.x) + "," + std::to_string(cmd_vel.twist.linear.y) + "," + std::to_string(cmd_vel.twist.angular.z) + "\n" << std::endl;
+			//std::cout <<  std::to_string(cmd_vel.twist.linear.x) + "," + std::to_string(cmd_vel.twist.linear.y) + "," + std::to_string(cmd_vel.twist.angular.z) + "\n" << std::endl;
 
 			// write command velocities to the .csv file
 			myfile1.open("./src/teb_local_planner/src/Data/cmd_vel.csv", std::ios::app);

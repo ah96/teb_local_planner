@@ -131,7 +131,7 @@ namespace teb_local_planner
         //get the cell coord of the center point of the robot
         if(!worldToMap(position.x, position.y, cell_x, cell_y))
         {
-            std::cout << "footprintCostHelper False 1" << std::endl;
+            //std::cout << "footprintCostHelper False 1" << std::endl;
             return -1.0;
         }
 
@@ -143,7 +143,7 @@ namespace teb_local_planner
             //if(cost == LETHAL_OBSTACLE || cost == INSCRIBED_INFLATED_OBSTACLE || cost == NO_INFORMATION)
             if(cost == 99)
             {
-                std::cout << "footprintCostHelper False 2" << std::endl;
+                //std::cout << "footprintCostHelper False 2" << std::endl;
                 return -1.0;
             }
             return cost;
@@ -169,14 +169,14 @@ namespace teb_local_planner
             //get the cell coord of the first point
             if(!worldToMap(footprint[i].x, footprint[i].y, x0, y0))
             {
-                std::cout << "footprintCostHelper False 3" << std::endl;
+                //std::cout << "footprintCostHelper False 3" << std::endl;
                 return -1.0;
             }
 
             //get the cell coord of the second point
             if(!worldToMap(footprint[i + 1].x, footprint[i + 1].y, x1, y1))
             {
-                std::cout << "footprintCostHelper False 4" << std::endl;
+                //std::cout << "footprintCostHelper False 4" << std::endl;
                 return -1.0;
             }
 
@@ -192,7 +192,7 @@ namespace teb_local_planner
             //if there is an obstacle that hits the line... we know that we can return false right away
             if(line_cost < 0)
             {
-                std::cout << "footprintCostHelper False 5" << std::endl;
+                //std::cout << "footprintCostHelper False 5" << std::endl;
                 return -1.0;
             }
         }
@@ -201,14 +201,14 @@ namespace teb_local_planner
         //get the cell coord of the last point
         if(!worldToMap(footprint.back().x, footprint.back().y, x0, y0))
         {
-                std::cout << "footprintCostHelper False 6" << std::endl;
+                //std::cout << "footprintCostHelper False 6" << std::endl;
                 return -1.0;
         }
 
         //get the cell coord of the first point
         if(!worldToMap(footprint.front().x, footprint.front().y, x1, y1))
         {
-                std::cout << "footprintCostHelper False 7" << std::endl;
+                //std::cout << "footprintCostHelper False 7" << std::endl;
                 return -1.0;
         }
 
@@ -217,7 +217,7 @@ namespace teb_local_planner
 
         if(line_cost < 0)
         {
-                std::cout << "footprintCostHelper False 8" << std::endl;
+                //std::cout << "footprintCostHelper False 8" << std::endl;
                 return -1.0;
         }
 
