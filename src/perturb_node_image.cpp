@@ -338,6 +338,8 @@ int main( int argc, char** argv )
 			}
 		}
 
+		std::cout << "before advertising finished" << std::endl << std::endl;
+
 	    ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
 
 		std::cout << "perturb_node_image finished" << std::endl << std::endl;
