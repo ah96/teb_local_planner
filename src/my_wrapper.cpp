@@ -55,12 +55,12 @@ void MyWrapper::initialize(const LocalCostmapROS &local_costmap, const geometry_
 			
 	// create the planner instance - here only TebOptimalPlanner is considered and used
 	planner_ = PlannerInterfacePtr(new TebOptimalPlanner(config_, &obstacles_, robot_model));
-	ROS_INFO("Parallel planning in distinctive topologies disabled.\n");
+	//ROS_INFO("Parallel planning in distinctive topologies disabled.\n");
 
-	ROS_INFO("No costmap conversion plugin specified. All occupied costmap cells are treaten as point obstacles.\n");
+	//ROS_INFO("No costmap conversion plugin specified. All occupied costmap cells are treaten as point obstacles.\n");
 
 	initialized_ = true;		
-	ROS_DEBUG("teb_local_planner initialized.\n");
+	//ROS_DEBUG("teb_local_planner initialized.\n");
 }
 
 
@@ -104,7 +104,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
    
   // prune global plan 
   bool prune = pruneGlobalPlan(global_plan_, config_.trajectory.global_plan_prune_distance);
-  std::cout << "prune: " << prune << std::endl;
+  //std::cout << "prune: " << prune << std::endl;
 
   // Transform global plan to the frame of interest (w.r.t. the local costmap) - from "map" frame to "odom" frame
   int goal_idx; // index of the goal
@@ -150,7 +150,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
   updateObstacleContainerWithCostmap(odom_pose_);
 
   // print how many points obstacles there are in the local costmap
-  std::cout << "obstacles_.size() = " << obstacles_.size() << std::endl;
+  //std::cout << "obstacles_.size() = " << obstacles_.size() << std::endl;
 
   // structure that will be sent to the planning function - it requires Twist message
   geometry_msgs::Twist odom_robot_vel;
@@ -159,7 +159,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
   
   // call the planning function
   bool success = planner_->plan(transformed_plan, &odom_robot_vel, config_.goal_tolerance.free_goal_vel);
-  std::cout << "success: " << success << std::endl;
+  //std::cout << "success: " << success << std::endl;
   
   // if planning not successful, call clearPlanner and return NO_VALID_CMD
   if (!success)

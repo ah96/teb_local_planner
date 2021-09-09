@@ -1317,7 +1317,7 @@ bool TebOptimalPlanner::isTrajectoryFeasibleImage(LocalCostmapROS &costmap_model
     //std::cout << i << " in look_ahead_idx" << std::endl;
     if ( costmap_model.footprintCost(teb().Pose(i).x(), teb().Pose(i).y(), teb().Pose(i).theta(), footprint_spec, inscribed_radius, circumscribed_radius) == -1 )
     {
-        std::cout << "isTrajectoryFeasibleImage False 1" << std::endl;
+        //std::cout << "isTrajectoryFeasibleImage False 1" << std::endl;
         return false;
     }
     // Checks if the distance between two poses is higher than the robot radius or the orientation diff is bigger than the specified threshold
@@ -1341,7 +1341,7 @@ bool TebOptimalPlanner::isTrajectoryFeasibleImage(LocalCostmapROS &costmap_model
           if ( costmap_model.footprintCost(intermediate_pose.x(), intermediate_pose.y(), intermediate_pose.theta(),
             footprint_spec, inscribed_radius, circumscribed_radius) == -1 )
           {
-            std::cout << "isTrajectoryFeasibleImage False 2" << std::endl;
+            //std::cout << "isTrajectoryFeasibleImage False 2" << std::endl;
             return false;
           }
         }
