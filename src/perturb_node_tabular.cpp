@@ -21,6 +21,7 @@
 
 #include <typeinfo>
 
+#include <std_srvs/Empty.h>
 
 
 using namespace teb_local_planner; // it is ok here to import everything for testing purposes
@@ -70,6 +71,12 @@ std::vector<std::vector<double>> parse2DCsvFile(std::string inputFileName) {
     return data;
 }
 
+bool callbackFinished(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response)
+{
+    return true;
+    //return perturbNodeImageFinished;
+}
+
 // =============== Main function =================   Manuelno se pozivaju funkcije iz teb_local_plannera
 int main( int argc, char** argv )
 {
@@ -79,10 +86,10 @@ int main( int argc, char** argv )
 		std::cout << "perturb_node_tabular started" << std::endl << std::endl;
 		
 		// Ucitavanje informacija o lokalnoj costmapi
-		std::vector<std::vector<double>> local_costmap_info = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/costmap_info.csv");
+		std::vector<std::vector<double>> local_costmap_info = parse2DCsvFile("./src/teb_local_planner/src/Data/costmap_info.csv");
 		
 		// Ucitavanje lokalne costmape
-		std::vector<std::vector<double>> local_costmap_data = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/costmap_data.csv");
+		std::vector<std::vector<double>> local_costmap_data = parse2DCsvFile("./src/teb_local_planner/src/Data/costmap_data.csv");
 		
 		// Kreiranje lokalne costmape
 		unsigned char arr[25600];
@@ -97,25 +104,25 @@ int main( int argc, char** argv )
 		LocalCostmapROS local_costmap_t(local_costmap_info[0][1], local_costmap_info[0][2], local_costmap_info[0][0], local_costmap_info[0][3], local_costmap_info[0][4], local_costmap_data_ptr);
 		//LocalCostmapROS local_costmap_t(160, 160, 0.025, -2.45, -6.925, local_costmap_data_ptr);
 		
-		// Ucitavanje amcl_pose
-		std::vector<std::vector<double>> amcl = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/amcl_pose.csv");
-		std::vector<geometry_msgs::Pose> amcl_pose;
+		// Load amcl_pose
+		std::vector<std::vector<double>> amcl = parse2DCsvFile("./src/teb_local_planner/src/Data/amcl_pose.csv");
+		std::vector<geometry_msgs::PoseStamped> amcl_pose;
 		for(int i = 0; i < amcl.size(); i++) 
 		{
-			geometry_msgs::Pose pose;
-			pose.position.x = amcl[i][0];
-			pose.position.y = amcl[i][1];
-			pose.position.z = 0.0;
-			pose.orientation.x = 0.0;
-			pose.orientation.y = 0.0;
-			pose.orientation.z = amcl[i][2];
-			pose.orientation.w = amcl[i][3];
+		    //std::cout << amcl[i][0] << " " << amcl[i][1] << std::endl;
+			geometry_msgs::PoseStamped pose;
+			pose.pose.position.x = amcl[i][0];
+			pose.pose.position.y = amcl[i][1];
+			pose.pose.position.z = 0.0;
+			pose.pose.orientation.x = 0.0;
+			pose.pose.orientation.y = 0.0;
+			pose.pose.orientation.z = amcl[i][2];
+			pose.pose.orientation.w = amcl[i][3];
 			amcl_pose.push_back(pose);
 		}
 		
-		// Ucitavanje tf_odom_map
-		std::vector<std::vector<double>> tf_odom_map = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/tf_odom_map.csv");
-		// Ovaj dio je tehnicki nepotreban
+		// Load tf_odom_map
+		std::vector<std::vector<double>> tf_odom_map = parse2DCsvFile("./src/teb_local_planner/src/Data/tf_odom_map.csv");
 		std::vector<geometry_msgs::TransformStamped> tf_odom_map_v;
 		for(int i = 0; i < tf_odom_map.size(); i++) 
 		{
@@ -131,9 +138,8 @@ int main( int argc, char** argv )
 			tf_odom_map_v.push_back(transform);
 		}
 		
-		// Ucitavanje tf_map_odom
-		std::vector<std::vector<double>> tf_map_odom = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/tf_map_odom.csv");
-		// Ovaj dio je tehnicki nepotreban
+		// Load tf_map_odom
+		std::vector<std::vector<double>> tf_map_odom = parse2DCsvFile("./src/teb_local_planner/src/Data/tf_map_odom.csv");
 		std::vector<geometry_msgs::TransformStamped> tf_map_odom_v;
 		for(int i = 0; i < tf_odom_map.size(); i++) 
 		{
@@ -149,8 +155,8 @@ int main( int argc, char** argv )
 			tf_map_odom_v.push_back(transform);
 		}
 		
-		// Ucitavanje odometrije
-		std::vector<std::vector<double>> odom = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/odom.csv");
+		// Load odometry
+		std::vector<std::vector<double>> odom = parse2DCsvFile("./src/teb_local_planner/src/Data/odom.csv");
 		std::vector<geometry_msgs::PoseStamped> odom_pose;
 		std::vector<geometry_msgs::TwistStamped> odom_twist;
 		for(int i = 0; i < odom.size(); i++) 
@@ -176,8 +182,8 @@ int main( int argc, char** argv )
 			odom_twist.push_back(tw);
 		}	
 		
-		// Ucitavanje globalnog plana
-		std::vector<std::vector<double>> global_plan = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/plan.csv");
+		// Load plan from global planner
+		std::vector<std::vector<double>> global_plan = parse2DCsvFile("./src/teb_local_planner/src/Data/plan.csv");
 		std::vector<geometry_msgs::PoseStamped> global_plan_t;
 		for(int i = 0; i < global_plan.size(); i++) 
 		{
@@ -192,9 +198,10 @@ int main( int argc, char** argv )
 			pose.pose.orientation.w = global_plan[i][3];
 			global_plan_t.push_back(pose);
 		}
-		
+
+		/*
 		// Ucitavanje lokalnog plana
-		std::vector<std::vector<double>> local_plan = parse2DCsvFile("/home/robolab/Amar/src/teb_local_planner/src/Data/local_plan.csv");
+		std::vector<std::vector<double>> local_plan = parse2DCsvFile("./src/teb_local_planner/src/Data/local_plan.csv");
 		std::vector<geometry_msgs::PoseStamped> local_plan_t;
 		for(int i = 0; i < local_plan.size(); i++) 
 		{
@@ -209,10 +216,24 @@ int main( int argc, char** argv )
 			pose.pose.orientation.w = local_plan[i][3];
 			local_plan_t.push_back(pose);
 		}
+		*/
+
+		// Load footprint
+		std::vector<std::vector<double>> footprint = parse2DCsvFile("./src/teb_local_planner/src/Data/footprint.csv");
+		std::vector<geometry_msgs::Point> footprint_t;
+		for(int i = 0; i < footprint.size(); i++) 
+		{
+			geometry_msgs::Point point;
+			point.x = footprint[i][0];
+			point.y = footprint[i][1];
+			point.z = 0.0;
+			//std::cout << point.x << " " << point.y << " " << point.z << std::endl;
+			footprint_t.push_back(point);
+		}
 	    	
 		// Kreiranje izlaznog csv fajla za komandne brzine
 		std::ofstream myfile;
-		myfile.open("/home/robolab/Amar/src/teb_local_planner/src/Data/cmd_vel.csv");		
+		myfile.open("./src/teb_local_planner/src/Data/cmd_vel.csv");		
 		
 		// Upisivanje naslova kolona u izlazni fajl
 		std::string s1 = "cmd_vel_lin_x";
@@ -226,7 +247,10 @@ int main( int argc, char** argv )
 		MyWrapper wrapper;
 		//geometry_msgs::TransformStamped odom_map_ref = tf_odom_map_v[0];
 		//geometry_msgs::TransformStamped* map_odom_ref = tf_map_odom_v[0];
-		wrapper.initialize(local_costmap_t, amcl_pose[0],  tf_odom_map_v[0],  tf_map_odom_v[0]);
+		//wrapper.initialize(local_costmap_t, amcl_pose[0],  tf_odom_map_v[0],  tf_map_odom_v[0]);
+		wrapper.initialize(local_costmap_t, odom_pose[0], odom_twist[0], amcl_pose[0], tf_odom_map_v[0], tf_map_odom_v[0], footprint_t);
+
+		std::cout << "odom.size(): " << odom.size() << std::endl;
 		
 		// For petlja za racunanje komandnih brzina za svaku sempliranu instancu
 		for(int i = 0; i < odom.size(); i++)
@@ -243,10 +267,18 @@ int main( int argc, char** argv )
 		
 		myfile.close();
 		
-		std::cout << "perturb_node_tabular finished" << std::endl << std::endl;
+		//std::cout << "perturb_node_tabular finished" << std::endl << std::endl;
 		
 		local_costmap_data_ptr = NULL;
-	
+
+		std::cout << "before advertising finished" << std::endl << std::endl;
+
+	    ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
+
+		std::cout << "perturb_node_tabular finished" << std::endl << std::endl;
+
+		ros::spin();
+
 		return 0;
 }
 

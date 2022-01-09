@@ -232,6 +232,23 @@ target_link_libraries(perturb_node_image
    ${catkin_LIBRARIES}
 )
 
+add_executable(perturb_node_tabular src/perturb_node_tabular.cpp)
+
+target_link_libraries(perturb_node_tabular
+   teb_local_planner
+   ${EXTERNAL_LIBS}
+   ${catkin_LIBRARIES}
+)
+
+
+add_executable(perturb_node_tabular_costmap src/perturb_node_tabular_costmap.cpp)
+
+target_link_libraries(perturb_node_tabular_costmap
+   teb_local_planner
+   ${EXTERNAL_LIBS}
+   ${catkin_LIBRARIES}
+)
+
 #add_dependencies(perturb_node_image ${CATKIN_DEPENDS})
 
 
