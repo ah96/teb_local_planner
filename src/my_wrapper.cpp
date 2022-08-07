@@ -33,13 +33,13 @@ void MyWrapper::initialize(const LocalCostmapROS &local_costmap, const geometry_
 	// local costmap
 	costmap_ = local_costmap;
 
-    // local costmap model
+  // local costmap model
 	costmap_model_ = boost::make_shared<base_local_planner::CostmapModel>(costmap_);	
 	
 	// reserve some memory for obstacles
 	obstacles_.reserve(500);
 
-    // robot's odometry (local) and map (global) location
+  // robot's odometry (local) and map (global) location
 	amcl_pose_ = amcl_pose;
 	odom_pose_ = odom_pose;
 
@@ -403,7 +403,8 @@ bool MyWrapper::transformGlobalPlan(const std::vector<geometry_msgs::PoseStamped
                   const LocalCostmapROS& costmap, double max_plan_length,
                   std::vector<geometry_msgs::PoseStamped>& transformed_plan, int* current_goal_idx) const
 {
-  // this method is a slightly modified version of base_local_planner/goal_functions.h
+  // this method is a slightly modified version of base_local_planner/goal_functions.
+  //max_plan_length = global_plan.size(); // ADDED BY ME FOR BETTER EXPLANATION
 
   const geometry_msgs::PoseStamped& plan_pose = global_plan[0];
 
@@ -458,7 +459,7 @@ bool MyWrapper::transformGlobalPlan(const std::vector<geometry_msgs::PoseStamped
     {
       const geometry_msgs::PoseStamped& pose = global_plan[i];
       // ovdje ide transformacija
-	  tf2::doTransform(pose, newer_pose, tf_map_odom_);
+	    tf2::doTransform(pose, newer_pose, tf_map_odom_);
 
       transformed_plan.push_back(newer_pose);
 
