@@ -650,7 +650,8 @@ public:
      // we also need to check the last vertex and the first vertex
      double vertex_dist = vertices_.back().norm();
      double edge_dist = distance_point_to_segment_2d(center, vertices_.back(), vertices_.front());
-     return std::min(min_dist, std::min(vertex_dist, edge_dist));
+     double res = std::min(min_dist, std::min(vertex_dist, edge_dist));
+     return res;
   }
 
 private:
