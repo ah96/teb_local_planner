@@ -9,6 +9,9 @@
 #include <stdexcept> // std::runtime_error
 #include <sstream> // std::stringstream
 
+#include <stdlib.h>
+#include <chrono>
+
 #include <std_msgs/Int64MultiArray.h>
 #include <std_msgs/Float32MultiArray.h>
 
@@ -83,13 +86,15 @@ bool callbackFinished(std_srvs::Empty::Request& request, std_srvs::Empty::Respon
 // =============== Main function =================   Samostalno se pozivaju funkcije iz teb_local_plannera
 int main( int argc, char** argv )
 {
+		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
 		ros::init(argc, argv, "perturb_node_image");
 		ros::NodeHandle n("~");
 
         //ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
 
 
-		std::cout << std::endl << "perturb_node_image started" << std::endl << std::endl;
+		//std::cout << std::endl << "perturb_node_image started" << std::endl << std::endl;
 		
 		// Load local costmap info
 		std::vector<std::vector<double>> local_costmap_info = parse2DCsvFile("./src/teb_local_planner/src/Data/costmap_info.csv");
@@ -340,18 +345,28 @@ int main( int argc, char** argv )
 			}
 		}
 
-		std::cout << "before advertising finished" << std::endl << std::endl;
+		//std::cout << "before advertising finished" << std::endl << std::endl;
 
-	    ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
+	    //ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
 
-		std::cout << "perturb_node_image finished" << std::endl << std::endl;
+		//std::cout << "perturb_node_image finished" << std::endl << std::endl;
 
 		//perturbNodeImageFinished = true;
 
-		//ros::shutdown();
-		
-		ros::spin();
+		/*
+		for(int k = 0; k < 50; k++)
+		{
+			std::cout << "spinning_" << std::to_string(k) << std::endl;
+
+			ros::spinOnce();
+		}
+		*/
 	
+		//ros::shutdown();
+
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
+		
 		return 0;
 }
 
