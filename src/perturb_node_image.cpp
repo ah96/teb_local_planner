@@ -345,6 +345,9 @@ int main( int argc, char** argv )
 			}
 		}
 
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		std::cout << "Time difference (TEB C++ node) = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
+		
 		//std::cout << "before advertising finished" << std::endl << std::endl;
 
 	    //ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
@@ -364,9 +367,6 @@ int main( int argc, char** argv )
 	
 		//ros::shutdown();
 
-		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
-		
 		return 0;
 }
 
