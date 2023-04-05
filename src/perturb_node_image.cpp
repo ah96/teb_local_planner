@@ -86,7 +86,7 @@ bool callbackFinished(std_srvs::Empty::Request& request, std_srvs::Empty::Respon
 // =============== Main function =================   Samostalno se pozivaju funkcije iz teb_local_plannera
 int main( int argc, char** argv )
 {
-		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+		//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 		ros::init(argc, argv, "perturb_node_image");
 		ros::NodeHandle n("~");
@@ -276,13 +276,14 @@ int main( int argc, char** argv )
 		myfile3 <<  s1 + "," + s2 + "," + s3 + "," + s4 + "\n";
 		myfile3.close();
 
-		
+		std::cout << "HALLO!!!" << std::endl;		
 		
 		//std::cout << "Vrijeme za inicijalizaciju" << std::endl << std::endl;
 				
 		// Calculate command velocities for every sampled perturbation
 		for(int i = 0; i < int(local_costmap_data.size() / 160); i++)
 		{
+			std::cout << std::endl << "i = " << i << std::endl; 
 			// Create/Get local costmap
 			for(int j = 0; j < local_costmap_data[0].size(); j++)
 			{
@@ -292,26 +293,27 @@ int main( int argc, char** argv )
 					//std::cout << int(arr[j*160+k]) << std::endl;
 					//std::cout << j << std::endl;
 				}
-			}			
+			}
+			//std::cout << "1" << std::endl; 			
 			local_costmap_data_ptr = arr;
 			// full initialization of the local costmap - set local costmap data to the local costmap instance
 			local_costmap_t.setCostmap(local_costmap_data_ptr);
-
+			//std::cout << "2" << std::endl; 
             // teb_local_planner initialization
 			wrapper.initialize(local_costmap_t, odom_pose[0], odom_twist[0], amcl_pose[0], tf_odom_map_v[0], tf_map_odom_v[0], footprint_t);
-
+			//std::cout << "3" << std::endl; 
 		    // send global plan to the teb_local_planner instance
 			wrapper.setPlan(global_plan_t); // send (global) plan to the teb local planner
-
+			//std::cout << "4" << std::endl; 
 			// declare local variables used
 			std::string message = "None";
 			std::vector<geometry_msgs::PoseStamped> local_plan;
 			std::vector<geometry_msgs::PoseStamped> transformed_plan;
-
+			//std::cout << "5" << std::endl; 
 			// print current iteration
 			//std::cout << "i = " << i << std::endl;
 			rez = wrapper.computeVelocityCommandsImage(cmd_vel, message, local_plan, transformed_plan); // compute command velocities
-
+			//std::cout << "6" << std::endl; 
 			// print result of the algorithm (whether it was successfull or no) and its message
 			//std::cout << "Da li je racunanje komandnih brzina bilo ispravno (0-SUCCESS) = " << rez << std::endl;
 			//std::cout << "Message: " << message << std::endl;
@@ -345,14 +347,14 @@ int main( int argc, char** argv )
 			}
 		}
 
-		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-		std::cout << "Time difference (TEB C++ node) = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
+		//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		//#std::cout << "Time difference (TEB C++ node) = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
 		
-		//std::cout << "before advertising finished" << std::endl << std::endl;
+		std::cout << "before advertising finished" << std::endl << std::endl;
 
-	    //ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
+	    ros::ServiceServer service = n.advertiseService("finished", callbackFinished);
 
-		//std::cout << "perturb_node_image finished" << std::endl << std::endl;
+		std::cout << "perturb_node_image finished" << std::endl << std::endl;
 
 		//perturbNodeImageFinished = true;
 

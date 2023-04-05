@@ -101,11 +101,11 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
   
   // goal_reached
   goal_reached_ = false;
-   
+  //std::cout << "compute 1" << std::endl; 
   // prune global plan 
   bool prune = pruneGlobalPlan(global_plan_, config_.trajectory.global_plan_prune_distance);
   //std::cout << "prune: " << prune << std::endl;
-
+  //std::cout << "compute 2" << std::endl;
   // Transform global plan to the frame of interest (w.r.t. the local costmap) - from "map" frame to "odom" frame
   int goal_idx; // index of the goal
   if (!transformGlobalPlan(global_plan_, costmap_, config_.trajectory.max_global_plan_lookahead_dist, transformed_plan, &goal_idx))
@@ -120,7 +120,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
   PoseSE2 odom_robot_goal;
   odom_robot_goal.x() = transformed_plan.back().pose.position.x;
   odom_robot_goal.y() = transformed_plan.back().pose.position.y;
-
+  //std::cout << "compute 3" << std::endl;
   // Overwrite goal orientation if needed
   if (config_.trajectory.global_plan_overwrite_orientation)
   {
@@ -134,7 +134,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
   {
     odom_robot_goal.theta() = tf2::getYaw(transformed_plan.back().pose.orientation);
   }
-
+  //std::cout << "compute 4" << std::endl;
   // this could be interesting to change
   // overwrite/update start of the transformed plan with the actual robot position (allows using the plan as initial trajectory)
   if (transformed_plan.size()==1) // plan only contains the goal
@@ -145,7 +145,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
 
   // clear currently existing obstacles
   obstacles_.clear();  
-
+  //std::cout << "compute 5" << std::endl;
   // update obstacles with costmap
   updateObstacleContainerWithCostmap(odom_pose_);
 
@@ -156,7 +156,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
   geometry_msgs::Twist odom_robot_vel;
   odom_robot_vel.linear = odom_velocity_.twist.linear;
   odom_robot_vel.angular = odom_velocity_.twist.angular;
-  
+  //std::cout << "compute 6" << std::endl;
   // call the planning function
   bool success = planner_->plan(transformed_plan, &odom_robot_vel, config_.goal_tolerance.free_goal_vel);
   //std::cout << "success: " << success << std::endl;
@@ -167,7 +167,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
     ROS_WARN("teb_local_planner was not able to obtain a local plan for the current setting.\n");
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-  
+  //std::cout << "compute 7" << std::endl;
   // Check for divergence
   if (planner_->hasDiverged())
   {
@@ -179,14 +179,14 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
 	message = "teb_local_planner was not able to obtain a local plan";
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-
+  //std::cout << "compute 8" << std::endl;
   // Check feasibility (but within the first few states only)
   if(config_.robot.is_footprint_dynamic)
   {
 	// Update footprint of the robot and minimum and maximum distance from the center of the robot to its footprint vertices.
     costmap_2d::calculateMinAndMaxDistances(footprint_spec_, robot_inscribed_radius_, robot_circumscribed_radius_);
   }
-
+  //std::cout << "compute 9" << std::endl;
   bool feasible = planner_->isTrajectoryFeasibleImage(costmap_, footprint_spec_, robot_inscribed_radius_, robot_circumscribed_radius_, config_.trajectory.feasibility_check_no_poses);
   if (!feasible)
   {	  
@@ -198,21 +198,21 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
     message = "teb_local_planner trajectory is not feasible";
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-
+  //std::cout << "compute 10" << std::endl;
   // Get the velocity command for this sampling interval
   if (!planner_->getVelocityCommand(cmd_vel.twist.linear.x, cmd_vel.twist.linear.y, cmd_vel.twist.angular.z, config_.trajectory.control_look_ahead_poses))
   {
     ROS_WARN("TebLocalPlannerROS: velocity command invalid. Resetting planner...\n");
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-  
+  //std::cout << "compute 11" << std::endl;
   // Saturate velocity, if the optimization results violates the constraints (could be possible due to soft constraints).
   saturateVelocity(cmd_vel.twist.linear.x, cmd_vel.twist.linear.y, cmd_vel.twist.angular.z,
                    config_.robot.max_vel_x, config_.robot.max_vel_y, config_.robot.max_vel_theta);
 
   const TimedElasticBand& teb_ =  planner_->getTeb();
   std::vector<VertexPose*> plan_vec = teb_.poses();
-  
+  //std::cout << "compute 12" << std::endl;
   for(int i = 0; i < plan_vec.size(); i++)
   {
 	  PoseSE2 pose_tmp = plan_vec[i]->pose();
@@ -224,7 +224,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
 	  //std::cout << "Theta: " << pose_tmp.theta() << std::endl;
 	  local_plan.push_back(poseStamped);
   }
-
+  //std::cout << "compute 13" << std::endl;
   return mbf_msgs::ExePathResult::SUCCESS;
 }
 
@@ -290,29 +290,30 @@ void MyWrapper::updateObstacleContainerWithCostmap(const geometry_msgs::PoseStam
   if (config_.obstacles.include_costmap_obstacles)
   {	  
     Eigen::Vector2d robot_orient(Eigen::Vector2d(std::cos(robot_orientation_yaw), std::sin(robot_orientation_yaw))); 
-	Eigen::Vector2d robot_pose(pose.pose.position.x, pose.pose.position.y);
-	//Eigen::Vector2d robot_pose(amcl_pose_.position.x, amcl_pose_.position.y);
-	
-	//std::cout << costmap_.getSizeInCellsX() << std::endl;
-	//std::cout << costmap_.getSizeInCellsY() << std::endl;
-    
+	  Eigen::Vector2d robot_pose(pose.pose.position.x, pose.pose.position.y);
+    //Eigen::Vector2d robot_pose(amcl_pose_.position.x, amcl_pose_.position.y);
+    //std::cout << "Obstacle 1" << std::endl;
+    //std::cout << "costmap_.getSizeInCellsX() = " << costmap_.getSizeInCellsX() << std::endl;
+    //std::cout << "costmap_.getSizeInCellsY() = " << costmap_.getSizeInCellsY() << std::endl;
+      
     for (unsigned int i=0; i<costmap_.getSizeInCellsX()-1; ++i)
     {
+      //std::cout << "i = " << i << std::endl;
       for (unsigned int j=0; j<costmap_.getSizeInCellsY()-1; ++j)
       {
-		if (costmap_.getCost(i,j) == 99) //costmap_2d::LETHAL_OBSTACLE
+        if (costmap_.getCost(i,j) == 99) //costmap_2d::LETHAL_OBSTACLE
         {
           Eigen::Vector2d obs;
           costmap_.mapToWorld(i,j,obs.coeffRef(0), obs.coeffRef(1));
-		  
+    
           // check if obstacle is interesting (e.g. not far behind the robot)
           Eigen::Vector2d obs_dir = obs-robot_pose;
-		  		  		  
-		  //std::cout << "obs: " << obs << std::endl;
-		  //std::cout << "robot_orient: " << robot_orient << std::endl;
-		  //std::cout << "robot_pose: " << robot_pose << std::endl;
-		  //std::cout << "obs_dir.norm(): " << obs_dir.norm() << "  ";
-		  //std::cout << "config: " << config_.obstacles.costmap_obstacles_behind_robot_dist << std::endl;
+                
+          //std::cout << "obs: " << obs << std::endl;
+          //std::cout << "robot_orient: " << robot_orient << std::endl;
+          //std::cout << "robot_pose: " << robot_pose << std::endl;
+          //std::cout << "obs_dir.norm(): " << obs_dir.norm() << "  ";
+          //std::cout << "config: " << config_.obstacles.costmap_obstacles_behind_robot_dist << std::endl;
 
           if ( obs_dir.dot(robot_orient) < 0 && obs_dir.norm() > config_.obstacles.costmap_obstacles_behind_robot_dist  )
             continue;
