@@ -1140,6 +1140,10 @@ void TebOptimalPlanner::extractVelocity(const PoseSE2& pose1, const PoseSE2& pos
 
 bool TebOptimalPlanner::getVelocityCommand(double& vx, double& vy, double& omega, int look_ahead_poses) const
 {
+  std::cout << "vx = " << vx << std::endl;
+  std::cout << "vy = " << vy << std::endl;
+  std::cout << "omega = " << omega << std::endl;
+  std::cout << "look_ahead_poses = " << look_ahead_poses << std::endl;
   if (teb_.sizePoses()<2)
   {
     ROS_ERROR("TebOptimalPlanner::getVelocityCommand(): The trajectory contains less than 2 poses. Make sure to init and optimize/plan the trajectory fist.");
@@ -1307,17 +1311,19 @@ bool TebOptimalPlanner::isTrajectoryFeasible(base_local_planner::CostmapModel* c
 bool TebOptimalPlanner::isTrajectoryFeasibleImage(LocalCostmapROS &costmap_model, const std::vector<geometry_msgs::Point>& footprint_spec,
                                              double inscribed_radius, double circumscribed_radius, int look_ahead_idx)
 {
+  std::cout << "look_ahead_idx: " << look_ahead_idx << std::endl;  
+  std::cout << "teb().sizePoses(): " << teb().sizePoses() << std::endl;
   if (look_ahead_idx < 0 || look_ahead_idx >= teb().sizePoses())
     look_ahead_idx = teb().sizePoses() - 1;
 
-  //std::cout << "look_ahead_idx: " << look_ahead_idx << std::endl;
+  std::cout << "look_ahead_idx_final: " << look_ahead_idx << std::endl;
 
   for (int i=0; i <= look_ahead_idx; ++i)
   {
-    //std::cout << i << " in look_ahead_idx" << std::endl;
+    std::cout << i << " in look_ahead_idx" << std::endl;
     if ( costmap_model.footprintCost(teb().Pose(i).x(), teb().Pose(i).y(), teb().Pose(i).theta(), footprint_spec, inscribed_radius, circumscribed_radius) == -1 )
     {
-        //std::cout << "isTrajectoryFeasibleImage False 1" << std::endl;
+        std::cout << "isTrajectoryFeasibleImage False 1" << std::endl;
         return false;
     }
     // Checks if the distance between two poses is higher than the robot radius or the orientation diff is bigger than the specified threshold

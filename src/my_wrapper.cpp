@@ -186,7 +186,7 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
 	// Update footprint of the robot and minimum and maximum distance from the center of the robot to its footprint vertices.
     costmap_2d::calculateMinAndMaxDistances(footprint_spec_, robot_inscribed_radius_, robot_circumscribed_radius_);
   }
-  //std::cout << "compute 9" << std::endl;
+  std::cout << "compute 9" << std::endl;
   bool feasible = planner_->isTrajectoryFeasibleImage(costmap_, footprint_spec_, robot_inscribed_radius_, robot_circumscribed_radius_, config_.trajectory.feasibility_check_no_poses);
   if (!feasible)
   {	  
@@ -198,14 +198,14 @@ std::vector<geometry_msgs::PoseStamped>& local_plan, std::vector<geometry_msgs::
     message = "teb_local_planner trajectory is not feasible";
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-  //std::cout << "compute 10" << std::endl;
+  std::cout << "compute 10" << std::endl;
   // Get the velocity command for this sampling interval
   if (!planner_->getVelocityCommand(cmd_vel.twist.linear.x, cmd_vel.twist.linear.y, cmd_vel.twist.angular.z, config_.trajectory.control_look_ahead_poses))
   {
     ROS_WARN("TebLocalPlannerROS: velocity command invalid. Resetting planner...\n");
     return mbf_msgs::ExePathResult::NO_VALID_CMD;
   }
-  //std::cout << "compute 11" << std::endl;
+  std::cout << "compute 11" << std::endl;
   // Saturate velocity, if the optimization results violates the constraints (could be possible due to soft constraints).
   saturateVelocity(cmd_vel.twist.linear.x, cmd_vel.twist.linear.y, cmd_vel.twist.angular.z,
                    config_.robot.max_vel_x, config_.robot.max_vel_y, config_.robot.max_vel_theta);
